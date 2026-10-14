@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A8A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Class Routine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@600;700&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: single narrow column. Day box and day chips on top, results as a stack of class rows below. */
+:root {
+  --bg: #EEF1F6;
+  --surface: #FFFFFF;
+  --ink: #14171F;
+  --muted: #4A5163;
+  --line: #E3E7EE;
+  --accent: #1B3A8A;
+  --accent-ink: #FFFFFF;
+  --chip: #F1F3F8;
+  --oop-bg: #DCE8FF; --oop-fg: #1B3A8A;
+  --lab-bg: #D5F2EE; --lab-fg: #0B5A52;
+  --chm-bg: #FFE6CF; --chm-fg: #8A3F0A;
+  --chl-bg: #FBF0C2; --chl-fg: #6B5200;
+  --mat-bg: #EADDFB; --mat-fg: #4B2A86;
+  --art-bg: #FAD9E4; --art-fg: #8A1E48;
+  --font-display: 'Familjen Grotesk', 'Trebuchet MS', system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1319; --surface: #181D26; --ink: #EEF1F7; --muted: #A3ABBC; --line: #2A3140;
+    --accent: #8DB0FF; --accent-ink: #0F1319; --chip: #232A36;
+    --oop-bg: #22335E; --oop-fg: #C9DAFF;
+    --lab-bg: #12403B; --lab-fg: #B5ECE4;
+    --chm-bg: #5A3212; --chm-fg: #FFD9B5;
+    --chl-bg: #4F4210; --chl-fg: #F6E49A;
+    --mat-bg: #3E2A66; --mat-fg: #E0CFFB;
+    --art-bg: #5C2238; --art-fg: #F8CBDA;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1319; --surface: #181D26; --ink: #EEF1F7; --muted: #A3ABBC; --line: #2A3140;
+  --accent: #8DB0FF; --accent-ink: #0F1319; --chip: #232A36;
+  --oop-bg: #22335E; --oop-fg: #C9DAFF;
+  --lab-bg: #12403B; --lab-fg: #B5ECE4;
+  --chm-bg: #5A3212; --chm-fg: #FFD9B5;
+  --chl-bg: #4F4210; --chl-fg: #F6E49A;
+  --mat-bg: #3E2A66; --mat-fg: #E0CFFB;
+  --art-bg: #5C2238; --art-fg: #F8CBDA;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  padding-inline: 16px;
+  padding-block: 24px 40px;
+}
+.wrap { max-width: 480px; margin-inline: auto; display: flex; flex-direction: column; gap: 20px; }
+.eyebrow { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 2px 0 0; font-family: var(--font-display); font-size: 34px; line-height: 1.1; font-weight: 700; color: var(--accent); text-wrap: balance; }
+
+.finder { display: flex; flex-direction: column; gap: 12px; }
+.finder label { font-size: 14px; font-weight: 700; }
+#day-input {
+  width: 100%; min-height: 52px; padding: 0 16px;
+  font: inherit; font-size: 18px; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 12px;
+}
+#day-input::placeholder { color: var(--muted); opacity: 0.8; }
+#day-input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  min-height: 44px; min-width: 52px; padding: 0 14px;
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--ink);
+  background: var(--chip); border: 0; border-radius: 10px; cursor: pointer;
+}
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.result { display: flex; flex-direction: column; gap: 12px; }
+.result-head { display: flex; flex-direction: column; gap: 2px; padding-inline: 2px; }
+.result-head h2 { margin: 0; font-family: var(--font-display); font-size: 28px; line-height: 1.15; font-weight: 700; }
+.result-head p { margin: 0; font-size: 14px; color: var(--muted); }
+.list { display: flex; flex-direction: column; background: var(--surface); border-radius: 16px; padding: 4px 14px; }
+.row { display: flex; gap: 12px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; }
+.time { flex: 0 0 84px; font-size: 14px; font-weight: 700; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.time span { display: block; font-weight: 400; color: var(--muted); }
+.what { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.code { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+.name { font-size: 16px; font-weight: 500; overflow-wrap: anywhere; }
+.room { flex: 0 0 auto; font-size: 13px; font-weight: 700; background: var(--chip); padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+.oop { background: var(--oop-bg); color: var(--oop-fg); }
+.lab { background: var(--lab-bg); color: var(--lab-fg); }
+.chm { background: var(--chm-bg); color: var(--chm-fg); }
+.chl { background: var(--chl-bg); color: var(--chl-fg); }
+.mat { background: var(--mat-bg); color: var(--mat-fg); }
+.art { background: var(--art-bg); color: var(--art-fg); }
+.note { background: var(--surface); border-radius: 16px; padding: 18px 16px; font-size: 16px; color: var(--muted); }
+.note strong { color: var(--ink); }
+.foot { margin: 0; padding-inline: 2px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .chip { transition: background-color 0.12s; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Fall 2026 · BCSE</p>
+    <h1>Class Routine</h1>
+  </header>
+
+  <section class="finder">
+    <label for="day-input">Which day?</label>
+    <input id="day-input" type="search" inputmode="text" enterkeyhint="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type a day, like sun or tuesday">
+    <div class="chips" id="chips" role="group" aria-label="Pick a day"></div>
+  </section>
+
+  <section class="result" id="result" aria-live="polite"></section>
+
+  <p class="foot">Based on Final Enrollment, Fall 2026. OOP and Art rooms change from day to day, so check the room before you go.</p>
+</div>
+
+<script>
+var DAY_ORDER = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+var JS_DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+var OOP = { code: "CSE 2383", name: "Object Oriented Programming", cls: "oop" };
+var OOPLAB = { code: "CSE 2384 · Lab", name: "OOP Lab (2 slots)", cls: "lab" };
+var CHEM = { code: "CHM 1201", name: "General Chemistry", cls: "chm" };
+var CHEMLAB = { code: "CHM 1202 · Lab", name: "General Chemistry Lab (2 slots)", cls: "chl" };
+var MATH = { code: "MAT 2105", name: "Linear Algebra", cls: "mat" };
+var ART = { code: "ART 1203", name: "Modern Living", cls: "art" };
+
+var SCHEDULE = {
+  Saturday: [
+    { c: OOP, start: "10:40 AM", end: "11:40 AM", room: "Room 612" },
+    { c: ART, start: "2:15 PM", end: "3:15 PM", room: "Room 305" }
+  ],
+  Sunday: [
+    { c: CHEM, start: "8:30 AM", end: "9:30 AM", room: "Room 507" },
+    { c: MATH, start: "9:35 AM", end: "10:35 AM", room: "Room 904" },
+    { c: OOPLAB, start: "10:40 AM", end: "12:45 PM", room: "Comlab8" }
+  ],
+  Monday: [
+    { c: CHEMLAB, start: "8:30 AM", end: "10:35 AM", room: "CHMlab1" },
+    { c: OOP, start: "10:40 AM", end: "11:40 AM", room: "Room 504" }
+  ],
+  Tuesday: [
+    { c: CHEM, start: "8:30 AM", end: "9:30 AM", room: "Room 507" },
+    { c: MATH, start: "9:35 AM", end: "10:35 AM", room: "Room 904" },
+    { c: OOP, start: "10:40 AM", end: "11:40 AM", room: "Room 611" },
+    { c: ART, start: "2:15 PM", end: "3:15 PM", room: "Room 902" }
+  ],
+  Wednesday: [
+    { c: CHEM, start: "8:30 AM", end: "9:30 AM", room: "Room 507" },
+    { c: ART, start: "2:15 PM", end: "3:15 PM", room: "Room 122" }
+  ],
+  Thursday: [],
+  Friday: []
+};
+
+var input = document.getElementById("day-input");
+var chipsEl = document.getElementById("chips");
+var resultEl = document.getElementById("result");
+
+function todayIndex() { return new Date().getDay(); }
+
+function resolve(raw) {
+  var q = raw.trim().toLowerCase();
+  if (!q) return { kind: "today" };
+  if (q.length >= 3 && "today".indexOf(q) === 0) return { kind: "day", day: JS_DAYS[todayIndex()], label: "Today" };
+  if (q.length >= 3 && "tomorrow".indexOf(q) === 0) return { kind: "day", day: JS_DAYS[(todayIndex() + 1) % 7], label: "Tomorrow" };
+  var hits = DAY_ORDER.filter(function (d) { return d.toLowerCase().indexOf(q) === 0; });
+  if (hits.length === 1) return { kind: "day", day: hits[0] };
+  if (hits.length > 1) return { kind: "ambiguous", hits: hits };
+  return { kind: "none", q: raw.trim() };
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function renderDay(day, label) {
+  var items = SCHEDULE[day];
+  var head = '<div class="result-head"><h2>' + day + '</h2><p>';
+  if (!items.length) {
+    resultEl.innerHTML = head + (label ? label + " · " : "") + 'No classes</p></div>' +
+      '<div class="note"><strong>' + day + ' is free.</strong> Nothing scheduled this week.</div>';
+    return;
+  }
+  var n = items.length;
+  head += (label ? label + " · " : "") + n + (n === 1 ? " class" : " classes") +
+    " · " + items[0].start + " to " + items[n - 1].end + '</p></div>';
+  var rows = items.map(function (it) {
+    return '<div class="row">' +
+      '<div class="time">' + esc(it.start) + '<span>to ' + esc(it.end) + '</span></div>' +
+      '<div class="what"><span class="code ' + it.c.cls + '">' + esc(it.c.code) + '</span>' +
+      '<span class="name">' + esc(it.c.name) + '</span></div>' +
+      '<div class="room">' + esc(it.room) + '</div></div>';
+  }).join("");
+  resultEl.innerHTML = head + '<div class="list">' + rows + '</div>';
+}
+
+function setPressed(day) {
+  var btns = chipsEl.querySelectorAll(".chip");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-day") === day ? "true" : "false");
+  }
+}
+
+function update() {
+  var r = resolve(input.value);
+  if (r.kind === "today") {
+    var d = JS_DAYS[todayIndex()];
+    renderDay(d, "Today");
+    setPressed(d);
+  } else if (r.kind === "day") {
+    renderDay(r.day, r.label);
+    setPressed(r.day);
+  } else if (r.kind === "ambiguous") {
+    resultEl.innerHTML = '<div class="note">That could be <strong>' + r.hits.join("</strong> or <strong>") +
+      '</strong>. Type a few more letters.</div>';
+    setPressed("");
+  } else {
+    resultEl.innerHTML = '<div class="note">No day matches <strong>' + esc(r.q) +
+      '</strong>. Try sat, sun, mon, tue, wed, thu or fri.</div>';
+    setPressed("");
+  }
+}
+
+DAY_ORDER.forEach(function (day) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.className = "chip";
+  b.setAttribute("data-day", day);
+  b.setAttribute("aria-pressed", "false");
+  b.textContent = day.slice(0, 3);
+  b.addEventListener("click", function () {
+    input.value = day;
+    update();
+  });
+  chipsEl.appendChild(b);
+});
+
+input.addEventListener("input", update);
+update();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
